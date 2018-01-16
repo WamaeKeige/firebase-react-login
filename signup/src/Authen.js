@@ -69,6 +69,24 @@ logout(){
   var lout = document.getElementById('logout');
   lout.classList.add('hide');
 }
+/**google**/
+google(){
+ var provider = new firebase.auth.GoogleAuthProvider();
+ var promise = firebase.auth().signInWithPopup(provider);
+
+ promise.then( result =>{
+   var user = result.user;
+   console.log(result);
+   firebase.database().ref('users/' +user.uid).set({
+     email: user.email,
+     name: user.displayName
+   });
+ });
+ promise.catch(e =>{
+   var msg = e.message;
+   console.log(msg);
+ })
+}
 /**
  * calling the constrtuctor.
  */
@@ -80,6 +98,7 @@ logout(){
    this.login = this.login.bind(this);
    this.signup = this.signup.bind(this);
    this.logout = this.logout.bind(this);
+   this.google = this.google.bind(this);
  }
 
   render() {
@@ -91,6 +110,7 @@ logout(){
       <button onClick={this.login}>Log In</button>
       <button onClick={this.signup}>Sign up</button>
       <button id="logout"className="hide" onClick={this.logout}>Log Out</button>
+      <button id="google" onClick={this.google}>Sign In With Google</button><br/>
      </div>
     );
   }
